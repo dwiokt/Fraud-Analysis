@@ -148,21 +148,19 @@ Comparison between COD and Non-COD transactions in relation to fraud risk.
 Insight:
 • COD transactions tend to carry higher fraud risk
 
-MySQL
-SQL Analysis & Insights
-1. Total Case
+MySQL: SQL Analysis & Insights
+---
 
+1. Total Case
 This query is used to identify the total number of customer reports related to delivered but not received cases recorded in the system.
 
 select count(*) as "Total_Case_Reported"
 from fraud_analysis;
 
-
 Insight:
 Serves as the baseline for understanding the volume of cases handled by the operations team.
 
 2. Fraud Rate
-
 Calculates the percentage of confirmed fraud cases compared to total reports.
 
 select 
@@ -174,12 +172,10 @@ from (
   from fraud_analysis
 ) as result;
 
-
 Insight:
 Most reports do not result in fraud, making validation a critical step before further decision-making.
 
 3. Branch & Employee Affected
-
 Shows the number of branches and employees involved in fraud cases.
 
 select 
@@ -188,12 +184,10 @@ select
 from fraud_analysis
 where final_resolution = "Fraud Confirmed";
 
-
 Insight:
 Cases are not concentrated in a single location or individual, but distributed across multiple branches and employees.
 
 4. Top 2 Employees with Most Fraud Cases
-
 Used to identify employees with the highest number of fraud cases.
 
 select 
@@ -206,12 +200,10 @@ group by employee_name, employee_id, branch_name
 order by Total_Fraud_Confirmed DESC
 limit 2;
 
-
 Insight:
 This data can support performance evaluation and help identify areas requiring closer attention.
 
 5. Fraud Cases per Year
-
 Displays the number of fraud cases by reporting year.
 
 select 
@@ -221,7 +213,6 @@ from fraud_analysis
 where Final_Resolution = "Fraud Confirmed"
 group by year_dlv
 order by year_dlv;
-
 
 Insight:
 Helps identify yearly trends and determine whether fraud cases are increasing or decreasing over time.
@@ -233,17 +224,18 @@ select
 from fraud_analysis
 group by Check_Result;
 
-
 Insight:
 Suspected cases require longer resolution times than safe cases, indicating additional verification steps.
 
 Key Conclusions
-
+---
 • Most reports do not result in confirmed fraud but still require investigation.
 • Fraud tends to occur under specific conditions, such as payment type and certain areas.
 • This dashboard helps teams understand risk patterns and improve case-handling efficiency.
 
+---
 =================
+
 Bahasa Indonesia 
 ---
 ### Project Overview
@@ -256,17 +248,16 @@ Dataset ini merepresentasikan proses investigasi internal yang biasanya dilakuka
 
 Data yang digunakan merupakan data dummy yang disusun berdasarkan alur kerja nyata dalam proses pengecekan kasus pengiriman bermasalah (fake POD). Struktur data, alur investigasi, dan kategorisasi dibuat menyerupai kondisi di lapangan.
 
----
-
 Tools Used
+---
 • Excel – data cleaning & preparation
 • SQL – data aggregation & analysis
 • Power BI – visualization & dashboard
 
 NOTE: Dataset ini dibuat untuk keperluan pembelajaran dan portfolio, dengan struktur yang disesuaikan dari pengalaman nyata di bidang operasional dan investigasi pengiriman.
 
----
 Excel
+---
 ## Data Preparation
 Sebelum dianalisis, data terlebih dahulu dibersihkan dan distandarisasi menggunakan Excel, antara lain:
 
@@ -280,18 +271,16 @@ Sebelum dianalisis, data terlebih dahulu dibersihkan dan distandarisasi mengguna
 
 Setelah itu, data digunakan sebagai dasar analisis di Power BI dan eksplorasi tambahan menggunakan SQL.
 
----
-
 Tujuan Analisis:
+---
 - Mengetahui seberapa besar proporsi laporan yang benar-benar fraud
 - Mengidentifikasi area atau kurir dengan risiko lebih tinggi
 - Memahami pola laporan berdasarkan jenis pembayaran (COD vs Non-COD)
 - Melihat performa penyelesaian kasus (resolution time)
 
----
 
-POWER BI
-## Dashboard Overview & Insights
+POWER BI: ## Dashboard Overview & Insights
+---
 
 1. KPI Summary (Bagian Kiri)
 Total Cases – 356
@@ -388,8 +377,8 @@ Insight:
 
 ---
 
-MySQL
-## SQL Analysis & Insights
+MySQL: SQL Analysis & Insights
+---
 
 1. Total Case
 Query ini digunakan untuk mengetahui jumlah total laporan customer terkait delivered but not received yang masuk ke system.
