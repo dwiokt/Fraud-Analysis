@@ -7,58 +7,41 @@ Project Overview
 This project was created to analyze customer reports related to “Delivered but Not Received”, a condition where customers report that a package is marked as delivered, but the item was not actually received.
 
 The dataset represents an internal investigation process typically handled by the operations team, especially checks related to:
-
-Proof of delivery (POD),
-
-Potential system issues,
-
-Indications of courier fraud.
+- Proof of delivery (POD),
+- Potential system issues,
+- Indications of courier fraud.
 
 The data used is dummy data, designed based on real operational workflows commonly applied when investigating problematic deliveries (fake POD cases). The data structure, investigation flow, and categorization are intentionally modeled to reflect real-world conditions.
 
 Tools Used
-
-• Excel – data cleaning & preparation
-• SQL – data aggregation & analysis
-• Power BI – visualization & dashboard
+1. Excel – data cleaning & preparation
+2. SQL – data aggregation & analysis
+3. Power BI – visualization & dashboard
 
 NOTE: This dataset was created for learning and portfolio purposes, with a structure adapted from real operational and delivery investigation experience.
 
-Excel
-Data Preparation
-
+Excel: Data Preparation
+---
 Before analysis, the data was cleaned and standardized using Excel, including:
-
 Cleaning text formats (TRIM(), PROPER()) to ensure consistency
-
 Adding status columns (e.g., Fraud Confirmed, Suspected, Safe)
-
 Creating dummy data such as:
-
 Tracking numbers (using RANDBETWEEN())
-
 COD / Non-COD status
-
 Investigation outcomes and final resolutions
-
 Adjusting the data structure to make it easier to analyze in Power BI
-
 After preparation, the dataset was used as the main input for Power BI analysis and further exploration using SQL.
 
 Analysis Objectives:
+---
+1. To understand the proportion of reports that are truly fraud
+2. To identify areas or couriers with higher risk
+3. To analyze reporting patterns based on payment type (COD vs Non-COD)
+4. To evaluate case resolution performance (resolution time)
 
-To understand the proportion of reports that are truly fraud
-
-To identify areas or couriers with higher risk
-
-To analyze reporting patterns based on payment type (COD vs Non-COD)
-
-To evaluate case resolution performance (resolution time)
-
-Power BI
-Dashboard Overview & Insights
+Power BI: Dashboard Overview & Insights
+---
 1. KPI Summary (Left Section)
-
 Total Cases – 356
 Shows the total number of customer reports received during the analysis period.
 This metric represents the overall workload handled by the operations team.
@@ -74,12 +57,16 @@ Insight:
 • Although the number of reports is relatively high, only a small portion are confirmed as fraud.
 • This highlights the importance of proper validation before taking further action.
 
+//
+
 Avg Resolution Time – 1.67 Days
 The average time required to resolve a case.
 
 Insight:
 • The investigation process is relatively fast.
 • This suggests that the team’s workflow is still fairly efficient.
+
+//
 
 Branch Affected
 The number of branches impacted by customer reports.
@@ -91,7 +78,6 @@ Insight:
 • Issues are not concentrated in a single location or individual, but spread across multiple branches and employees.
 
 2. Safe vs Suspected Cases
-
 This chart compares:
 • Safe → valid / non-problematic reports
 • Suspected → reports requiring further investigation
@@ -100,7 +86,6 @@ Insight:
 Most reports fall under the Safe category, but there is still a significant portion that needs deeper investigation.
 
 3. Investigation Result Breakdown
-
 This visual shows the final outcomes of the investigation process:
 • Fake POD → invalid proof of delivery
 • System Error → technical issues in the system
@@ -109,7 +94,6 @@ Insight:
 Most cases are not caused by intentional courier actions, but rather technical constraints or system errors.
 
 4. Fraud vs Non-Fraud Distribution
-
 Shows a comparison between:
 • Confirmed fraud cases
 • Cases that were not proven to be fraud
@@ -118,7 +102,6 @@ Insight:
 Although report volume is high, the majority of cases are not confirmed as fraud after investigation.
 
 5. Total Customer Reports & Fraud (Time Trend)
-
 This chart displays:
 • Monthly report volume
 • Number of fraud cases
@@ -128,21 +111,16 @@ Insight:
 • Fraud cases do not always follow spikes in report volume — a high number of reports does not necessarily indicate higher fraud risk
 
 6. Employee Performance
-
 Displays the number of fraud cases by each employee.
 
 Insight:
 • Some couriers have higher case counts than others
 • This data can be used for:
-
-performance evaluation
-
-additional training
-
-operational monitoring
+1. performance evaluation
+2. additional training
+3. operational monitoring
 
 7. COD vs Non-COD Risk Analysis
-
 Comparison between COD and Non-COD transactions in relation to fraud risk.
 
 Insight:
@@ -256,9 +234,8 @@ Tools Used
 
 NOTE: Dataset ini dibuat untuk keperluan pembelajaran dan portfolio, dengan struktur yang disesuaikan dari pengalaman nyata di bidang operasional dan investigasi pengiriman.
 
-Excel
+Excel: ## Data Preparation
 ---
-## Data Preparation
 Sebelum dianalisis, data terlebih dahulu dibersihkan dan distandarisasi menggunakan Excel, antara lain:
 
 - Membersihkan format teks (`TRIM()`, `PROPER()`) agar konsisten
