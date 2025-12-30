@@ -1,1 +1,244 @@
-# Fraud-Analysis
+# Fraud Analysis
+
+---
+### Project Overview
+Project ini dibuat untuk menganalisis laporan pelanggan terkait **“Delivered but Not Received”**, yaitu kondisi ketika pelanggan melaporkan bahwa paket sudah berstatus terkirim, tetapi barang tidak diterima.
+
+Dataset ini merepresentasikan proses investigasi internal yang biasanya dilakukan oleh tim operasional, khususnya hasil cek terkait:
+- Bukti pengiriman (POD),
+- Potensi kesalahan sistem,
+- Indikasi fraud oleh kurir.
+
+Data yang digunakan merupakan data dummy yang disusun berdasarkan alur kerja nyata dalam proses pengecekan kasus pengiriman bermasalah (fake POD). Struktur data, alur investigasi, dan kategorisasi dibuat menyerupai kondisi di lapangan.
+
+---
+
+Tools Used
+• Excel – data cleaning & preparation
+• SQL – data aggregation & analysis
+• Power BI – visualization & dashboard
+
+NOTE: Dataset ini dibuat untuk keperluan pembelajaran dan portfolio, dengan struktur yang disesuaikan dari pengalaman nyata di bidang operasional dan investigasi pengiriman.
+
+---
+Excel
+## Data Preparation
+Sebelum dianalisis, data terlebih dahulu dibersihkan dan distandarisasi menggunakan Excel, antara lain:
+
+- Membersihkan format teks (`TRIM()`, `PROPER()`) agar konsisten
+- Menambahkan kolom status (misalnya: *Fraud Confirmed, Suspected, Safe*)
+- Membuat dummy data seperti:
+  * Nomor resi (menggunakan `RANDBETWEEN()`)
+  * Status COD/Non-COD
+  * Hasil investigasi dan resolusi yang dicapai
+- Menyesuaikan struktur data agar mudah dianalisis di Power BI
+
+Setelah itu, data digunakan sebagai dasar analisis di Power BI dan eksplorasi tambahan menggunakan SQL.
+
+---
+
+Tujuan Analisis:
+- Mengetahui seberapa besar proporsi laporan yang benar-benar fraud
+- Mengidentifikasi area atau kurir dengan risiko lebih tinggi
+- Memahami pola laporan berdasarkan jenis pembayaran (COD vs Non-COD)
+- Melihat performa penyelesaian kasus (resolution time)
+
+---
+
+POWER BI
+## Dashboard Overview & Insights
+
+1. KPI Summary (Bagian Kiri)
+Total Cases – 356
+Menunjukkan total laporan customer yang masuk dalam periode analisis.
+Angka ini menjadi dasar untuk melihat seberapa besar volume kasus yang harus ditangani tim.
+
+Fraud Confirmed – 18
+Jumlah laporan yang setelah dilakukan investigasi dinyatakan sebagai fraud.
+Ini menunjukkan bahwa tidak semua laporan berujung pada kesalahan kurir atau sistem.
+ 
+Fraud Rate – 5.06%
+Persentase kasus fraud dibandingkan seluruh laporan.
+* Insight:
+• Walaupun jumlah laporan cukup banyak, hanya sebagian kecil yang benar-benar fraud.
+• Ini menunjukkan pentingnya proses validasi sebelum mengambil tindakan lebih lanjut.
+
+--
+
+Avg Resolution Time – 1.67 Days
+Rata-rata waktu yang dibutuhkan untuk menyelesaikan satu kasus.
+
+* Insight:
+• Proses investigasi relatif cepat.
+• Menunjukkan alur kerja tim masih cukup efisien.
+
+--
+
+Branch Affected
+Jumlah cabang yang terdampak laporan.
+
+Employee Affected – 14
+Jumlah kurir yang terlibat dalam laporan.
+
+* Insight:
+• Masalah tidak terpusat pada satu titik saja, tapi tersebar di beberapa cabang dan individu.
+
+--
+
+2. Safe vs Suspected Cases
+Diagram ini menunjukkan perbandingan antara:
+• Safe → laporan yang valid / tidak bermasalah
+• Suspected → laporan yang perlu investigasi lanjutan
+
+* Insight:
+Mayoritas laporan berada di kategori Safe, namun tetap ada porsi signifikan yang perlu ditelusuri lebih lanjut.
+
+--
+
+3. Investigation Result Breakdown
+Visual ini menampilkan hasil akhir dari proses investigasi:
+• Fake POD -> bukti pengiriman tidak valid
+• System Error -> kesalahan teknis pada sistem
+
+* Insight:
+Sebagian besar kasus bukan karena kesengajaan kurir, melainkan kendala teknis atau kesalahan sistem.
+
+--
+
+4. Fraud vs Non-Fraud Distribution
+Menunjukkan perbandingan antara:
+• Kasus yang benar-benar fraud
+• Kasus yang tidak terbukti fraud
+Insight:
+Walaupun laporan cukup banyak, mayoritas tidak terbukti sebagai fraud setelah investigasi dilakukan.
+
+--
+
+5. Total Customer Report & Fraud (Trend Waktu)
+Grafik ini menunjukkan:
+• Jumlah laporan per bulan
+• Jumlah kasus fraud yang terjadi
+Insight:
+• Terlihat fluktuasi laporan dari waktu ke waktu
+• Fraud tidak selalu mengikuti lonjakan jumlah laporan -> volume laporan tinggi tidak selalu berarti risiko fraud tinggi
+
+--
+
+6. Employee Performance
+Menampilkan jumlah fraud berdasarkan masing-masing employee.
+
+* Insight:
+• Beberapa kurir memiliki jumlah kasus lebih tinggi dibanding yang lain
+• Data ini dapat digunakan untuk:
+	- evaluasi performa
+	- pelatihan tambahan
+	- monitoring operasional
+
+--
+
+7. COD vs Non-COD Risk Analysis
+Perbandingan antara transaksi COD dan Non-COD terhadap risiko fraud.
+Insight:
+• Transaksi COD memiliki kecenderungan risiko lebih tinggi
+
+---
+
+MySQL
+## SQL Analysis & Insights
+
+1. Total Case
+Query ini digunakan untuk mengetahui jumlah total laporan customer terkait delivered but not received yang masuk ke system.
+
+select count(*) as "Total_Case_Reported"
+from fraud_analysis;
+
+Insight:
+Menjadi dasar untuk memahami volume laporan yang perlu ditangani oleh tim operasional.
+
+--
+
+2. Fraud Rate
+Menghitung persentase laporan yang terkonfirmasi sebagai fraud dibandingkan dengan total laporan.
+
+select 
+  Total_Fraud_Confirmed * 100.0 / Total_Case_Reported as "Fraud_Rate_Percentage"
+from (
+  select
+    count(*) as Total_Case_Reported,
+    sum(case when Final_Resolution = 'Fraud Confirmed' then 1 else 0 end) as Total_Fraud_Confirmed
+  from fraud_analysis
+) as result;
+
+Insight:
+Sebagian besar laporan tidak berujung pada fraud, sehingga proses validasi menjadi langkah penting sebelum pengambilan keputusan lebih lanjut.
+
+--
+
+3. Branch & Employee Affected
+
+Menunjukkan jumlah cabang dan karyawan yang terlibat dalam kasus fraud.
+
+select 
+    count(distinct branch_name) as branch_affected, 
+    count(distinct employee_id) as employee_affected
+from fraud_analysis
+where final_resolution = "Fraud Confirmed";
+
+Insight:
+Kasus tidak terpusat pada satu lokasi atau individu tertentu, melainkan tersebar di beberapa cabang dan karyawan.
+
+--
+
+4. Top 2 Employee with Most Fraud Cases
+
+Digunakan untuk melihat employee dengan jumlah kasus fraud terbanyak.
+
+select 
+    employee_name, 
+    employee_id, 
+    branch_name,
+    sum(case when Final_Resolution = 'Fraud Confirmed' then 1 else 0 end) as Total_Fraud_Confirmed
+from fraud_analysis
+group by employee_name, employee_id, branch_name
+order by Total_Fraud_Confirmed DESC
+limit 2;
+
+Insight:
+Data ini dapat digunakan sebagai bahan evaluasi performa dan penentuan area yang memerlukan perhatian tambahan.
+
+--
+
+5. Fraud Cases per Year
+
+Menampilkan jumlah kasus fraud berdasarkan tahun laporan.
+
+select 
+    substr(delivered_date, 7, 4) as year_dlv,
+    count(*) as total_fraud_cases
+from fraud_analysis
+where Final_Resolution = "Fraud Confirmed"
+group by year_dlv
+order by year_dlv;
+
+Insight:
+Membantu melihat tren tahunan dan mengetahui apakah terdapat peningkatan atau penurunan kasus fraud dari waktu ke waktu.
+
+--
+
+6. average resolution time by Check Result
+
+select 
+    Check_Result,
+    round(avg(Resolution_Time_Days), 2) as avg_resolution_days
+from fraud_analysis
+group by Check_Result;
+
+Insight:
+Kasus suspected membutuhkan waktu penyelesaian yang lebih lama dibandingkan safe, menunjukkan adanya proses verifikasi tambahan.
+
+---
+
+Kesimpulan Utama
+• Mayoritas laporan tidak berujung pada fraud, namun tetap memerlukan proses investigasi.
+• Fraud lebih sering muncul pada kondisi tertentu seperti jenis pembayaran dan area tertentu.
+• Dashboard ini membantu tim memahami pola risiko dan meningkatkan efisiensi penanganan kasus.
