@@ -1,8 +1,253 @@
 # Fraud Analysis
 
+===============
+English
+Project Overview
+
+This project was created to analyze customer reports related to “Delivered but Not Received”, a condition where customers report that a package is marked as delivered, but the item was not actually received.
+
+The dataset represents an internal investigation process typically handled by the operations team, especially checks related to:
+
+Proof of delivery (POD),
+
+Potential system issues,
+
+Indications of courier fraud.
+
+The data used is dummy data, designed based on real operational workflows commonly applied when investigating problematic deliveries (fake POD cases). The data structure, investigation flow, and categorization are intentionally modeled to reflect real-world conditions.
+
+Tools Used
+
+• Excel – data cleaning & preparation
+• SQL – data aggregation & analysis
+• Power BI – visualization & dashboard
+
+NOTE: This dataset was created for learning and portfolio purposes, with a structure adapted from real operational and delivery investigation experience.
+
+Excel
+Data Preparation
+
+Before analysis, the data was cleaned and standardized using Excel, including:
+
+Cleaning text formats (TRIM(), PROPER()) to ensure consistency
+
+Adding status columns (e.g., Fraud Confirmed, Suspected, Safe)
+
+Creating dummy data such as:
+
+Tracking numbers (using RANDBETWEEN())
+
+COD / Non-COD status
+
+Investigation outcomes and final resolutions
+
+Adjusting the data structure to make it easier to analyze in Power BI
+
+After preparation, the dataset was used as the main input for Power BI analysis and further exploration using SQL.
+
+Analysis Objectives:
+
+To understand the proportion of reports that are truly fraud
+
+To identify areas or couriers with higher risk
+
+To analyze reporting patterns based on payment type (COD vs Non-COD)
+
+To evaluate case resolution performance (resolution time)
+
+Power BI
+Dashboard Overview & Insights
+1. KPI Summary (Left Section)
+
+Total Cases – 356
+Shows the total number of customer reports received during the analysis period.
+This metric represents the overall workload handled by the operations team.
+
+Fraud Confirmed – 18
+The number of reports that were confirmed as fraud after investigation.
+This indicates that not all reports result from courier or system issues.
+
+Fraud Rate – 5.06%
+The percentage of fraud cases compared to total reports.
+
+Insight:
+• Although the number of reports is relatively high, only a small portion are confirmed as fraud.
+• This highlights the importance of proper validation before taking further action.
+
+Avg Resolution Time – 1.67 Days
+The average time required to resolve a case.
+
+Insight:
+• The investigation process is relatively fast.
+• This suggests that the team’s workflow is still fairly efficient.
+
+Branch Affected
+The number of branches impacted by customer reports.
+
+Employee Affected – 14
+The number of couriers involved in reported cases.
+
+Insight:
+• Issues are not concentrated in a single location or individual, but spread across multiple branches and employees.
+
+2. Safe vs Suspected Cases
+
+This chart compares:
+• Safe → valid / non-problematic reports
+• Suspected → reports requiring further investigation
+
+Insight:
+Most reports fall under the Safe category, but there is still a significant portion that needs deeper investigation.
+
+3. Investigation Result Breakdown
+
+This visual shows the final outcomes of the investigation process:
+• Fake POD → invalid proof of delivery
+• System Error → technical issues in the system
+
+Insight:
+Most cases are not caused by intentional courier actions, but rather technical constraints or system errors.
+
+4. Fraud vs Non-Fraud Distribution
+
+Shows a comparison between:
+• Confirmed fraud cases
+• Cases that were not proven to be fraud
+
+Insight:
+Although report volume is high, the majority of cases are not confirmed as fraud after investigation.
+
+5. Total Customer Reports & Fraud (Time Trend)
+
+This chart displays:
+• Monthly report volume
+• Number of fraud cases
+
+Insight:
+• Report volume fluctuates over time
+• Fraud cases do not always follow spikes in report volume — a high number of reports does not necessarily indicate higher fraud risk
+
+6. Employee Performance
+
+Displays the number of fraud cases by each employee.
+
+Insight:
+• Some couriers have higher case counts than others
+• This data can be used for:
+
+performance evaluation
+
+additional training
+
+operational monitoring
+
+7. COD vs Non-COD Risk Analysis
+
+Comparison between COD and Non-COD transactions in relation to fraud risk.
+
+Insight:
+• COD transactions tend to carry higher fraud risk
+
+MySQL
+SQL Analysis & Insights
+1. Total Case
+
+This query is used to identify the total number of customer reports related to delivered but not received cases recorded in the system.
+
+select count(*) as "Total_Case_Reported"
+from fraud_analysis;
+
+
+Insight:
+Serves as the baseline for understanding the volume of cases handled by the operations team.
+
+2. Fraud Rate
+
+Calculates the percentage of confirmed fraud cases compared to total reports.
+
+select 
+  Total_Fraud_Confirmed * 100.0 / Total_Case_Reported as "Fraud_Rate_Percentage"
+from (
+  select
+    count(*) as Total_Case_Reported,
+    sum(case when Final_Resolution = 'Fraud Confirmed' then 1 else 0 end) as Total_Fraud_Confirmed
+  from fraud_analysis
+) as result;
+
+
+Insight:
+Most reports do not result in fraud, making validation a critical step before further decision-making.
+
+3. Branch & Employee Affected
+
+Shows the number of branches and employees involved in fraud cases.
+
+select 
+    count(distinct branch_name) as branch_affected, 
+    count(distinct employee_id) as employee_affected
+from fraud_analysis
+where final_resolution = "Fraud Confirmed";
+
+
+Insight:
+Cases are not concentrated in a single location or individual, but distributed across multiple branches and employees.
+
+4. Top 2 Employees with Most Fraud Cases
+
+Used to identify employees with the highest number of fraud cases.
+
+select 
+    employee_name, 
+    employee_id, 
+    branch_name,
+    sum(case when Final_Resolution = 'Fraud Confirmed' then 1 else 0 end) as Total_Fraud_Confirmed
+from fraud_analysis
+group by employee_name, employee_id, branch_name
+order by Total_Fraud_Confirmed DESC
+limit 2;
+
+
+Insight:
+This data can support performance evaluation and help identify areas requiring closer attention.
+
+5. Fraud Cases per Year
+
+Displays the number of fraud cases by reporting year.
+
+select 
+    substr(delivered_date, 7, 4) as year_dlv,
+    count(*) as total_fraud_cases
+from fraud_analysis
+where Final_Resolution = "Fraud Confirmed"
+group by year_dlv
+order by year_dlv;
+
+
+Insight:
+Helps identify yearly trends and determine whether fraud cases are increasing or decreasing over time.
+
+6. Average Resolution Time by Check Result
+select 
+    Check_Result,
+    round(avg(Resolution_Time_Days), 2) as avg_resolution_days
+from fraud_analysis
+group by Check_Result;
+
+
+Insight:
+Suspected cases require longer resolution times than safe cases, indicating additional verification steps.
+
+Key Conclusions
+
+• Most reports do not result in confirmed fraud but still require investigation.
+• Fraud tends to occur under specific conditions, such as payment type and certain areas.
+• This dashboard helps teams understand risk patterns and improve case-handling efficiency.
+
+=================
+Bahasa Indonesia 
 ---
 ### Project Overview
-Project ini dibuat untuk menganalisis laporan pelanggan terkait **“Delivered but Not Received”**, yaitu kondisi ketika pelanggan melaporkan bahwa paket sudah berstatus terkirim, tetapi barang tidak diterima.
+Project ini dibuat untuk menganalisis laporan pelanggan terkait “Delivered but Not Received”, yaitu kondisi ketika pelanggan melaporkan bahwa paket sudah berstatus terkirim, tetapi barang tidak diterima.
 
 Dataset ini merepresentasikan proses investigasi internal yang biasanya dilakukan oleh tim operasional, khususnya hasil cek terkait:
 - Bukti pengiriman (POD),
